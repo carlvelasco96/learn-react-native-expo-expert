@@ -1,5 +1,7 @@
 export type RootNativeStackParamList = {
-  ManageExpense: undefined;
+  ManageExpense: {
+    expenseId?: string;
+  };
   ExpensesOverview: undefined;
 };
 

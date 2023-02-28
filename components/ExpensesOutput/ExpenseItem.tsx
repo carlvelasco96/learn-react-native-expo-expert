@@ -2,16 +2,41 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { GlobalStyles } from "../../constants/styles";
 import { getFormattedDate } from "../../utils/helpers/date";
+import {
+  CompositeNavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {
+  RootBottomTabParamList,
+  RootNativeStackParamList,
+} from "../../utils/definitions/navigation";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
 type Props = {
+  id: string;
   description: string;
   date: Date;
   amount: number;
 };
 
-const ExpenseItem = ({ description, date, amount }: Props) => {
+type NavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<RootNativeStackParamList>,
+  BottomTabNavigationProp<RootBottomTabParamList, "RecentExpenses">
+>;
+
+const ExpenseItem = ({ id, description, date, amount }: Props) => {
+  const { navigate } = useNavigation<NavigationProp>();
+
+  function expensePressHandler() {
+    navigate("ManageExpense", { expenseId: id });
+  }
+
   return (
-    <Pressable>
+    <Pressable
+      onPress={expensePressHandler}
+      style={({ pressed }) => pressed && styles.pressed}
+    >
       <View style={styles.expenseItem}>
         <View>
           <Text style={[styles.textBase, styles.description]}>
@@ -30,6 +55,9 @@ const ExpenseItem = ({ description, date, amount }: Props) => {
 export default ExpenseItem;
 
 const styles = StyleSheet.create({
+  pressed: {
+    opacity: 0.75,
+  },
   expenseItem: {
     padding: 12,
     marginVertical: 8,
