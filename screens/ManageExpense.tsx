@@ -4,7 +4,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootNativeStackParamList } from "../utils/definitions/navigation";
 import IconButton from "../components/UI/IconButton";
 import { GlobalStyles } from "../constants/styles";
-import Button from "../components/UI/Button";
 import { ExpensesContext } from "../store/expenses-context";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 
@@ -30,34 +29,37 @@ const ManageExpense = ({ route, navigation }: Props) => {
     navigation.goBack();
   }
 
-  function confirmHandler() {
+  function confirmHandler(values: {
+    amount: number;
+    date: Date;
+    description: string;
+  }) {
     if (isEditing) {
-      expensesCtx.updateExpense(editedExpenseId!, {
-        description: "Test",
-        amount: 100,
-        date: new Date(),
-      });
+      expensesCtx.updateExpense(editedExpenseId!, values);
     } else {
-      expensesCtx.addExpense({
-        description: "Test",
-        amount: 100,
-        date: new Date(),
-      });
+      expensesCtx.addExpense(values);
     }
     navigation.goBack();
   }
 
+  const editedExpense = expensesCtx.expenses.find(
+    (expense) => expense.id === editedExpenseId
+  );
+
+  const defaultValues = {
+    amount: editedExpense?.amount.toString() || "",
+    date: editedExpense?.date.toISOString().split("T")[0] || "",
+    description: editedExpense?.description || "",
+  };
+
   return (
     <View style={styles.container}>
-      <ExpenseForm />
-      <View style={styles.buttons}>
-        <Button mode="flat" onPress={cancelHandler} style={styles.button}>
-          Cancel
-        </Button>
-        <Button onPress={confirmHandler} style={styles.button}>
-          {isEditing ? "Update" : "Add"}
-        </Button>
-      </View>
+      <ExpenseForm
+        defaultValues={defaultValues}
+        isEditing={isEditing}
+        onCancel={cancelHandler}
+        onSubmit={confirmHandler}
+      />
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -79,15 +81,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 24,
     backgroundColor: GlobalStyles.colors.primary800,
-  },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
   },
   deleteContainer: {
     marginTop: 16,

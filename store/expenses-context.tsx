@@ -47,7 +47,7 @@ const DUMMY_EXPENSES: Expense[] = [
 ];
 
 type ExpensesContextType = {
-  expenses: any[];
+  expenses: Expense[];
   addExpense: ({ description, amount, date }: Expense) => void;
   deleteExpense: (id: string) => void;
   updateExpense: (id: string, { description, amount, date }: Expense) => void;
