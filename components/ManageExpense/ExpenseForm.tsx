@@ -60,8 +60,6 @@ const ExpenseForm = ({
       description: inputs.description.value,
     };
 
-    console.log("expenseData", expenseData);
-
     const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
     const dateIsValid = expenseData.date.toString() !== "Invalid Date";
     const descriptionIsValid = expenseData.description.trim().length > 0;
