@@ -46,16 +46,10 @@ const ManageExpense = ({ route, navigation }: Props) => {
     (expense) => expense.id === editedExpenseId
   );
 
-  const defaultValues = {
-    amount: editedExpense?.amount.toString() || "",
-    date: editedExpense?.date.toISOString().split("T")[0] || "",
-    description: editedExpense?.description || "",
-  };
-
   return (
     <View style={styles.container}>
       <ExpenseForm
-        defaultValues={defaultValues}
+        defaultValues={editedExpense}
         isEditing={isEditing}
         onCancel={cancelHandler}
         onSubmit={confirmHandler}

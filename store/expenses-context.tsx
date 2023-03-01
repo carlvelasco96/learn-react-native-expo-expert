@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useReducer } from "react";
 
-type Expense = {
+export type Expense = {
   id?: string;
   description: string;
   amount: number;
